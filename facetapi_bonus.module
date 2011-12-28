@@ -1,0 +1,52 @@
+<?php
+
+/**
+ * @file
+ *
+ * Supply additional plugins/funtionality for facetapi
+ */
+
+/**
+ * Implements hook_facetapi_facet_info_alter().
+ */
+function facetapi_bonus_facetapi_facet_info_alter(&$facet_info, $searcher_info) {
+  foreach ($facet_info as &$facet) {
+    $facet['dependency plugins'][] = 'facet';
+  }
+}
+
+
+/**
+ * Implements hook_facetapi_dependencies().
+ */
+function facetapi_bonus_facetapi_dependencies() {
+  return array(
+    'facet' => array(
+      'handler' => array(
+        'label' => t('Another facet'),
+        'class' => 'FacetapiDependencyFacet',
+      ),
+    ),
+  );
+}
+
+
+/**
+* Implements hook_facetapi_filters().
+*/
+function facetapi_bonus_facetapi_filters() {
+  return array(
+    'exclude_items' => array(
+      'handler' => array(
+        'label' => t('Exclude specified items'),
+        'class' => 'FacetapiFilterExcludeItems',
+      ),
+    ),
+    'rewrite_items' => array(
+      'handler' => array(
+        'label' => t('Rewrite facet items via callback function'),
+        'class' => 'FacetapiFilterRewriteItems',
+      ),
+    ),
+  );
+}

@@ -1,0 +1,8 @@
+core = "7.x"
+dependencies[] = "facetapi"
+description = "Additions to facetapi"
+files[] = "plugins/facetapi/dependency_facet.inc"
+files[] = "plugins/facetapi/filter_rewrite_items.inc"
+files[] = "plugins/facetapi/filter_exclude_specified_items.inc"
+name = Facet API Bonus
+package = Search Toolkit
