@@ -19,7 +19,7 @@ class FacetapiFilterExcludeItems extends FacetapiFilter {
    */
   public function execute(array $build) {
     $exclude_string = $this->settings->settings['exclude'];
-    $exclude_array =  drupal_explode_tags($exclude_string);
+    $exclude_array = drupal_explode_tags($exclude_string);
     // Exclude item if its markup or indexed_value is one of excluded items
     // or is matched by one of the excluded item treated as regexp if the
     // exclude items starts with "/".
