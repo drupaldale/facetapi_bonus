@@ -7,6 +7,8 @@
  *
  * ToDos:
  * - remove depending facet from url if this dependency gets lost
+ * - enable user to choose, how multiple dependencies to other facets are
+ *   treated (are they met using AND, OR - or an arbitrary combination chain?)
  *
  */
 
@@ -66,7 +68,7 @@ class FacetapiDependencyFacet extends FacetapiDependency {
           }
         }
 
-        // ... otherwise hide this facet
+        // Otherwise hide this facet.
         return FALSE;
       }
     }
@@ -76,7 +78,7 @@ class FacetapiDependencyFacet extends FacetapiDependency {
    * Adds dependency settings to the form.
    */
   public function settingsForm(&$form, &$form_state) {
-    // Get enabled facets (minus this dependency's one)
+    // Get enabled facets (minus this dependency's one).
     $facets = $this->getEnabledFacets($form['#facetapi']['settings']->searcher);
     unset($facets[$form['#facetapi']['settings']->facet]);
 
@@ -95,7 +97,7 @@ class FacetapiDependencyFacet extends FacetapiDependency {
       '#description' => t('Deactivate this facet if dependency is not met anymore, even if this facet has had active items itself (recommended)'),
     );
 
-    // add optional value input field and extend default settings for each facet
+    // Add optional value field and extend default settings for each facet.
     foreach ($facets as $facet_name => $facet_title) {
       $id = 'facet_items_' . $facet_name;
       $checkboxid = '#edit-facets-' . str_replace('_', '-', drupal_strtolower($facet_name));
