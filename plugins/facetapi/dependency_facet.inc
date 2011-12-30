@@ -15,7 +15,7 @@
  */
 class FacetapiDependencyFacet extends FacetapiDependency {
 
-  protected $default_settings;
+  protected $defaultSettings;
 
   /**
    * Executes the dependency check.
@@ -106,7 +106,7 @@ class FacetapiDependencyFacet extends FacetapiDependency {
         '#default_value' => isset($this->settings[$id]) ? $this->settings[$id] : NULL,
         '#states' => array('visible' => array($checkboxid => array('checked' => TRUE))),
       );
-      $this->default_settings[$id] = '';
+      $this->defaultSettings[$id] = '';
     }
   }
 
@@ -117,10 +117,10 @@ class FacetapiDependencyFacet extends FacetapiDependency {
    * but the enabled facets are not known yet (afaik, hence the add. property)
    */
   public function getDefaultSettings() {
-    if (!count($this->default_settings)) {
-      $this->default_settings = array('facets' => array(), 'force_deactivation' => TRUE);
+    if (!count($this->defaultSettings)) {
+      $this->defaultSettings = array('facets' => array(), 'force_deactivation' => TRUE);
     }
-    return $this->default_settings;
+    return $this->defaultSettings;
   }
 
   /**
