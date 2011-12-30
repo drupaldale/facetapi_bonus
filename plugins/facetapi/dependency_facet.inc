@@ -21,39 +21,44 @@ class FacetapiDependencyFacet extends FacetapiDependency {
    * Executes the dependency check.
    */
   public function execute() {
-    $active_facets = $this->getActiveFacets();
-
-    // show this facet, if it is active itself and forced deactivation isn't on
-    if (!$this->settings['force_deactivation'] && isset($active_facets[$this->facet['name']])) {
-      return TRUE;
+    // Show this facet, if it is active itself and forced deactivation isn't on.
+    if (!$this->settings['force_deactivation'] && $this->activeItems[$this->facet['name']]) {
+      return;
     }
     else {
-      // show this facet if no facet dependencies are configured
+      // Show this facet if no facet dependencies are configured.
       $facets = array_filter($this->settings['facets']);
       if (!count($facets)) {
-        return TRUE;
+        return;
       }
       else {
-        // show this facet, if any configured facet dependency ...
+        // Check if any configured facet dependency is met.
         foreach ($facets as $facet_name) {
-          // ... is met ...
-          if (isset($active_facets[$facet_name])) {
-            // ... without fine grained facet items dependencies ...
+          if ($this->activeItems[$facet_name]) {
+            // Show if dependency is met without specific dependency items.
             if (empty($this->settings['facet_items_' . $facet_name])) {
-              return TRUE;
+              return;
             }
             else {
               $items_string = trim($this->settings['facet_items_' . $facet_name]);
               $facet_items = explode(',', $items_string);
-              // ... without any real fine grained facet items values ...
+              // Show if dependency is met without specific dependency items.
               if (empty($items_string) || !count($facet_items)) {
-                return TRUE;
+                return;
               }
-              // ... or with fine grained facet item dependencies ...
+              // Show if dependency is met with specific dependency items.
               else {
                 foreach ($facet_items as $facet_item) {
-                  if (in_array(trim($facet_item), $active_facets[$facet_name])) {
-                    return TRUE;
+                  foreach ($this->activeItems[$facet_name] as $active_facet_item_key => $active_facet_item_data) {
+                    $facet_item = trim($facet_item);
+                    if (!empty($facet_item) &&
+                        (
+                          ($facet_item == $active_facet_item_key) ||
+                          (($facet_item[0] == '/') && preg_match($facet_item, $active_facet_item_key))
+                        )
+                    ) {
+                      return;
+                    }
                   }
                 }
               }
@@ -136,27 +141,6 @@ class FacetapiDependencyFacet extends FacetapiDependency {
     }
 
     return $facets;
-  }
-
-  /**
-   * Determine active facets and their values
-   *
-   * Returns an associative array: active facet name => array of facet value(s)
-   */
-  public function getActiveFacets() {
-    $active_facets = array();
-    if (isset($_GET['f'])) {
-      $facets_request_arguments = $_GET['f'];
-      if (count($facets_request_arguments)) {
-        foreach ($facets_request_arguments as $facets_request_argument) {
-          $facets_request_argument = explode(':', $facets_request_argument);
-          if (count($facets_request_argument) == 2) {
-            $active_facets[check_plain($facets_request_argument[0])][] = check_plain($facets_request_argument[1]);
-          }
-        }
-      }
-    }
-    return $active_facets;
   }
 
 }
