@@ -10,8 +10,8 @@
  */
 
 /**
-* Plugin that excludes specified facet items.
-*/
+ * Plugin that excludes specified facet items.
+ */
 class FacetapiFilterExcludeItems extends FacetapiFilter {
 
   /**
@@ -22,22 +22,25 @@ class FacetapiFilterExcludeItems extends FacetapiFilter {
     $exclude_array = explode(',', $exclude_string);
     // Exclude item if its markup or indexed_value is one of excluded items
     // or is matched by one of the excluded item treated as regexp if the
-    // exclude items starts with "/"
+    // exclude items starts with "/".
     $filtered_build = array();
     foreach ($build as $key => $item) {
       $exclude = FALSE;
       foreach ($exclude_array as $exclude_item) {
         $exclude_item = trim($exclude_item);
-        if (
-            ($item['#indexed_value'] == $exclude_item) ||
-            ($item['#markup']        == $exclude_item) ||
-            (($exclude_item[0] == '/') && preg_match($exclude_item, $item['#indexed_value'])) ||
-            (($exclude_item[0] == '/') && preg_match($exclude_item, $item['#markup']))
+        if (!empty($exclude_item) &&
+            (($item['#indexed_value'] == $exclude_item) ||
+              ($item['#markup'] == $exclude_item) ||
+              (($exclude_item[0] == '/') && preg_match($exclude_item, $item['#indexed_value'])) ||
+              (($exclude_item[0] == '/') && preg_match($exclude_item, $item['#markup']))
+            )
           ) {
           $exclude = TRUE;
         }
       }
-      if (!$exclude) $filtered_build[$key] = $item;
+      if (!$exclude) {
+        $filtered_build[$key] = $item;
+      }
     }
 
     return $filtered_build;
