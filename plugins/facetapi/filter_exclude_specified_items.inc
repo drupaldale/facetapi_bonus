@@ -22,19 +22,25 @@ class FacetapiFilterExcludeItems extends FacetapiFilter {
     $exclude_array = drupal_explode_tags($exclude_string);
     // Exclude item if its markup or indexed_value is one of excluded items
     // or is matched by one of the excluded item treated as regexp if the
-    // exclude items starts with "/".
+    // regex option is checked by the user.
     $filtered_build = array();
     foreach ($build as $key => $item) {
       $exclude = FALSE;
       foreach ($exclude_array as $exclude_item) {
-        if (!empty($exclude_item) &&
-            (($item['#indexed_value'] == $exclude_item) ||
-              ($item['#markup'] == $exclude_item) ||
-              (($exclude_item[0] == '/') && preg_match($exclude_item, $item['#indexed_value'])) ||
-              (($exclude_item[0] == '/') && preg_match($exclude_item, $item['#markup']))
-            )
-          ) {
-          $exclude = TRUE;
+        if (!empty($exclude_item)) {
+          if (!$this->settings->settings['regex']) {
+            $exclude |= (
+              $item['#indexed_value'] == $exclude_item ||
+              $item['#markup'] == $exclude_item
+            );
+          }
+          else {
+            $exclude_item = '/' . trim(str_replace('/', '\\/', $exclude_item)) . '/';
+            $exclude |= (
+              preg_match($exclude_item, $item['#indexed_value']) ||
+              preg_match($exclude_item, $item['#markup'])
+            );
+          }
         }
       }
       if (!$exclude) {
@@ -52,15 +58,24 @@ class FacetapiFilterExcludeItems extends FacetapiFilter {
     $form['exclude'] = array(
       '#title' => t('Exclude items'),
       '#type' => 'textfield',
-      '#description' => t("Comma separated list of titles or values that should be excluded. If an exclude item starts with '/^' and ends with '/', it is used as a regular expression with preg_match to match against an item's title or value."),
+      '#description' => t("Comma separated list of titles or values that should be excluded, matching either an item's title or value."),
       '#default_value' => $this->settings->settings['exclude'],
+    );
+    $form['regex'] = array(
+      '#title' => t('Regular expressions used'),
+      '#type' => 'checkbox',
+      '#description' => t('Interpret each exclude list item as a regular expression pattern.<br /><small>(Slashes are escaped automatically, patterns using a comma can be wrapped in "double quotes", and if such a pattern uses double quotes itself, just make them double-double-quotes (""))</small>.'),
+      '#default_value' => $this->settings->settings['regex'],
     );
   }
 
   /**
-   * Returns an array of default settings
+   * Returns an array of default settings.
    */
   public function getDefaultSettings() {
-    return array('exclude' => '');
+    return array(
+      'exclude' => '',
+      'regex' => 0,
+    );
   }
 }
