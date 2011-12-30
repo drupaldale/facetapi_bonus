@@ -44,7 +44,8 @@ Currently Facet API Bonus includes:
 
 ===> Further additions are very welcome! <===
 
-Facet API Bonus is written for Drupal 7, and is stable, tested, and ready to be used in production environments.
+Facet API Bonus is written for Drupal 7, and is stable, tested,
+and ready to be used in production environments.
 
 Requirements:
 
@@ -67,4 +68,3 @@ MODULE URL
 More information and issues, see the module page, currently at:
 
   http://drupal.org/sandbox/daniel.nolde/1387636
-
