@@ -32,8 +32,8 @@ function facetapi_bonus_facetapi_dependencies() {
 
 
 /**
-* Implements hook_facetapi_filters().
-*/
+ * Implements hook_facetapi_filters().
+ */
 function facetapi_bonus_facetapi_filters() {
   return array(
     'exclude_items' => array(
