@@ -134,7 +134,7 @@ class FacetapiDependencyFacet extends FacetapiDependency {
       $this->defaultSettings = array(
                                      'facets' => array(),
                                      'force_deactivation' => TRUE,
-                                     'regex' => FALSE
+                                     'regex' => FALSE,
                                     );
     }
     return $this->defaultSettings;
