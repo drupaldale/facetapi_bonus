@@ -137,7 +137,7 @@ class FacetapiDependencyFacet extends FacetapiDependency {
     $enabled_facets = $enabled_facets[$searcher . ':'];
 
     foreach ($enabled_facets as $facet_key => $facet_object) {
-      $facets[$facet_key] = t($facet_object['label']) . ' (' . $facet_object['name'] . ')';
+      $facets[$facet_key] = $facet_object['label'] . ' (' . $facet_object['name'] . ')';
     }
 
     return $facets;
