@@ -83,8 +83,7 @@ class FacetapiDependencyFacet extends FacetapiDependency {
    */
   public function settingsForm(&$form, &$form_state) {
     // Get enabled facets (minus this dependency's one).
-    $facets = $this->getEnabledFacets($form['#facetapi']['settings']->searcher);
-    unset($facets[$form['#facetapi']['settings']->facet]);
+    $facets = $this->getEnabledFacets();
 
     $form[$this->id]['facets'] = array(
       '#type' => 'checkboxes',
@@ -146,13 +145,11 @@ class FacetapiDependencyFacet extends FacetapiDependency {
    * Returns an associative array facet name => title
    * of factes enabled for the given searcher
    */
-  public function getEnabledFacets($searcher = array()) {
+  public function getEnabledFacets() {
     $facets = array();
 
-    facetapi_get_enabled_facets($searcher, NULL);
-    $enabled_facets = &drupal_static('facetapi_get_enabled_facets', array());
-    $enabled_facets = $enabled_facets[$searcher . ':'];
-
+    $enabled_facets = facetapi_get_enabled_facets($this->adapter->getSearcher());
+    unset($enabled_facets[$this->facet['name']]);
     foreach ($enabled_facets as $facet_key => $facet_object) {
       $facets[$facet_key] = $facet_object['label'] . ' (' . $facet_object['name'] . ')';
     }
